@@ -11,6 +11,7 @@ type Args struct {
 	ScriptName string
 	Command    string
 	val        map[string]string
+	rawArgs    []string
 }
 
 const (
@@ -33,6 +34,8 @@ func (a *Args) Parse() {
 	regexCommand := regexp.MustCompile(strCommand)
 
 	for _, obj := range ar[1:] {
+		a.rawArgs = append(a.rawArgs, obj)
+
 		if matches := regexLine.FindStringSubmatch(obj); len(matches) > 0 {
 			key := matches[1]
 			value := matches[2]
@@ -43,6 +46,9 @@ func (a *Args) Parse() {
 	}
 }
 
+func (a *Args) GetRawArgs() []string {
+	return a.rawArgs
+}
 func (a *Args) GetString(name string) string {
 	return a.GetStringOr(name, "")
 }
